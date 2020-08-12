@@ -1,0 +1,16 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: 495034970639-easfrq5e1eutpaj34u86tt79nout339v.apps.googleusercontent.com
+            clientSecret: Rlthj2S3-aHP1sHCw9p8cWyX
+            scope:
+              - profile
+              - email
+          github:
+            clientId: 89eacbdcd21b3538c9ba
+            clientSecret: 207e0eb16c9f0d3d76421f0336abe9f88c71fd73
+  session:
+    store-type: jdbc
