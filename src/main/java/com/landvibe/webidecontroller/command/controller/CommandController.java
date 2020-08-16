@@ -30,6 +30,12 @@ public class CommandController {
         return commandService.getCommands(projectId);
     }
 
+    @GetMapping(value = "/name/{name}", produces = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Command> getCommandsByName(@PathVariable String name) {
+        return commandService.getCommandsByName(name);
+    }
+
     @PostMapping(value = "", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public Command createCommand(@RequestBody Command command) {

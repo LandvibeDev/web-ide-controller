@@ -20,6 +20,10 @@ public class CommandService {
         return commandRepository.findAllByProjectId(projectId);
     }
 
+    public List<Command> getCommandsByName(String name) {
+        return commandRepository.findCommandsByName(name);
+    }
+
     public Optional<Command> getCommand(String commandId) {
         return commandRepository.findById(commandId);
     }
