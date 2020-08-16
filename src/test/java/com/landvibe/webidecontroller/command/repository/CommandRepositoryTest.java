@@ -48,4 +48,38 @@ class CommandRepositoryTest {
         assertThat(actual.isEmpty()).isFalse();
         assertThat(actual).isEqualTo(expected);
     }
+
+    @Test
+    public void test_findCommandsByName() {
+        // given
+        final String commandName = "testName1";
+        final String projectId = "testProjectId";
+        final Command expected1 = Command.builder()
+                .name(commandName)
+                .command("testCommand1")
+                .projectId(projectId)
+                .build();
+        final Command expected2 = Command.builder()
+                .name("testName2")
+                .command("testCommand2")
+                .projectId(projectId)
+                .build();
+        final Command expected3 = Command.builder()
+                .name("testName3")
+                .command("testCommand3")
+                .projectId(projectId)
+                .build();
+
+        List<Command> expected = new ArrayList<>();
+        expected.add(commandRepository.save(expected1));
+        commandRepository.save(expected2);
+        commandRepository.save(expected3);
+
+        // when
+        List<Command> actual = commandRepository.findCommandsByName(commandName);
+
+        // then
+        assertThat(actual.isEmpty()).isFalse();
+        assertThat(actual).isEqualTo(expected);
+    }
 }
