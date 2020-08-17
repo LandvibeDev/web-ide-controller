@@ -1,4 +1,4 @@
-package com.landvibe.webidecontroller.auth;
+package com.landvibe.webidecontroller.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -7,8 +7,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum Role {
 
-    GUSET("ROLE_GUEST", "손님"),
-    USER("ROLE_USER", "일반 사용자");
+    ADMIN("ROLE_ADMIN", "관리자"),
+    USER("ROLE_USER", "유저");
 
     private final String key;
     private final String title;
