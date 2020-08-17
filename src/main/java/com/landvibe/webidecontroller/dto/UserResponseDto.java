@@ -8,12 +8,12 @@ import java.io.Serializable;
 @Getter
 public class UserResponseDto implements Serializable {
 
-    private Long id;
+    private String id;
     private String name;
     private String email;
 
     @Builder
-    public UserResponseDto(Long id, String name, String email){
+    public UserResponseDto(String id, String name, String email){
         this.id = id;
         this.name = name;
         this.email = email;

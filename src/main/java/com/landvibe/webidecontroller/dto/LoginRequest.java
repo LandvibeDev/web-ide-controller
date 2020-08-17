@@ -15,6 +15,4 @@ public class LoginRequest {
 
     @NotBlank
     private String password;
-
-    // Getters and Setters (Omitted for brevity)
 }

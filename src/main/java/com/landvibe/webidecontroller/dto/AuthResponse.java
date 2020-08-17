@@ -12,6 +12,4 @@ public class AuthResponse {
     public AuthResponse(String accessToken) {
         this.accessToken = accessToken;
     }
-
-    // Getters and Setters (Omitted for brevity)
 }

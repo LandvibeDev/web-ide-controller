@@ -13,6 +13,4 @@ public class ApiResponse {
         this.success = success;
         this.message = message;
     }
-
-    // Getters and Setters (Omitted for brevity)
 }
