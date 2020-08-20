@@ -3,10 +3,12 @@ package com.landvibe.webidecontroller.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "users", uniqueConstraints = {
@@ -14,7 +16,7 @@ import javax.validation.constraints.NotNull;
 })
 @Getter
 @Setter
-public class User {
+public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
@@ -30,6 +32,9 @@ public class User {
 
     @Column(nullable = false)
     private Boolean emailVerified = false;
+
+    @Column
+    private Boolean registered = false;
 
     @JsonIgnore
     private String password;

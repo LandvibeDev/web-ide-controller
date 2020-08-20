@@ -17,7 +17,6 @@ public class UserController {
 
     @GetMapping("/user/me")
     @PreAuthorize("hasRole('USER')")
-    // @Cacheable(value = "users", key = "#userPrincipal.id")
     public UserResponseDto getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
 
         return userService.getCurrentUser(userPrincipal);

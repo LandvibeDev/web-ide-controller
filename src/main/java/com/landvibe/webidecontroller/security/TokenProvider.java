@@ -8,21 +8,22 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import com.landvibe.webidecontroller.security.UserPrincipal;
 
 @Service
 public class TokenProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(TokenProvider.class);
 
-    private AppProperties appProperties;
+    private final AppProperties appProperties;
 
     public TokenProvider(AppProperties appProperties) {
         this.appProperties = appProperties;
     }
 
     public String createToken(Authentication authentication) {
+        System.out.println(authentication.getPrincipal());
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        // UserPrincipal userPrincipal = new UserPrincipal();
 
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + appProperties.getAuth().getTokenExpirationMsec());
