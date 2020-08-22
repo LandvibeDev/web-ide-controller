@@ -10,12 +10,15 @@ import javax.validation.constraints.NotBlank;
 @Setter
 public class SignUpRequest {
     @NotBlank
-    private String name;
+    private String nickname;
 
     @NotBlank
     @Email
     private String email;
 
     @NotBlank
-    private String password;
+    private String introduce;
+
+    @NotBlank
+    private String provider;
 }

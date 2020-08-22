@@ -3,7 +3,9 @@ package com.landvibe.webidecontroller.security.oauth2;
 import com.landvibe.webidecontroller.config.AppProperties;
 import com.landvibe.webidecontroller.exception.BadRequestException;
 import com.landvibe.webidecontroller.security.TokenProvider;
+import com.landvibe.webidecontroller.security.UserPrincipal;
 import com.landvibe.webidecontroller.util.CookieUtils;
+import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -16,6 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import static com.landvibe.webidecontroller.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
@@ -62,11 +66,19 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
 
-        String token = tokenProvider.createToken(authentication);
 
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+
+        String token = "";
+        if(userPrincipal.getRegistered()) {
+            token = tokenProvider.createToken(authentication);
+        }
         // email, regisitered 추가
         return UriComponentsBuilder.fromUriString(targetUrl)
                 .queryParam("token", token)
+                .queryParam("email", userPrincipal.getEmail())
+                .queryParam("registered", userPrincipal.getRegistered())
+                .queryParam("provider", userPrincipal.getProvider())
                 .build().toUriString();
     }
 

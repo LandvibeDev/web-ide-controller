@@ -1,6 +1,7 @@
 package com.landvibe.webidecontroller.controller;
 
 import com.landvibe.webidecontroller.exception.BadRequestException;
+import com.landvibe.webidecontroller.exception.ResourceNotFoundException;
 import com.landvibe.webidecontroller.model.AuthProvider;
 import com.landvibe.webidecontroller.model.User;
 import com.landvibe.webidecontroller.dto.ApiResponse;
@@ -9,6 +10,7 @@ import com.landvibe.webidecontroller.dto.LoginRequest;
 import com.landvibe.webidecontroller.dto.SignUpRequest;
 import com.landvibe.webidecontroller.repository.UserRepository;
 import com.landvibe.webidecontroller.security.TokenProvider;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,6 +25,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.Optional;
 
 @RestController
 public class AuthController {
@@ -39,43 +42,38 @@ public class AuthController {
     @Autowired
     private TokenProvider tokenProvider;
 
-    @PostMapping(value = "/signin")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequest.getEmail(),
-                        loginRequest.getPassword()
-                )
-        );
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        String token = tokenProvider.createToken(authentication);
-        return ResponseEntity.ok(new AuthResponse(token));
-    }
+//    @PostMapping(value = "/signin")
+//    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+//
+//        Authentication authentication = authenticationManager.authenticate(
+//                new UsernamePasswordAuthenticationToken(
+//                        loginRequest.getEmail(),
+//                        loginRequest.getPassword()
+//                )
+//        );
+//
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+//
+//        String token = tokenProvider.createToken(authentication);
+//        return ResponseEntity.ok(new AuthResponse(token));
+//    }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
-        if(userRepository.existsByEmail(signUpRequest.getEmail())) {
-            throw new BadRequestException("Email address already in use.");
+    public String registerUser(@Valid @RequestBody SignUpRequest signUpRequest) throws NotFoundException {
+        // Creating user's account
+        User user = userRepository.findByEmailAndProvider(signUpRequest.getEmail(), signUpRequest.getProvider())
+                .orElseThrow(() -> new NotFoundException("not found"));
+
+        if(user.getRegistered()) {
+            // error
         }
 
-        // Creating user's account
-        User user = new User();
-        user.setName(signUpRequest.getName());
-        user.setEmail(signUpRequest.getEmail());
-        user.setPassword(signUpRequest.getPassword());
+        user.setNickname(signUpRequest.getNickname());
+        user.setIntroduce(signUpRequest.getIntroduce());
+        user.setRegistered(true);
+        userRepository.save(user);
+        String token = tokenProvider.createToken(user);
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-        User result = userRepository.save(user);
-
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentContextPath().path("/user/me")
-                .buildAndExpand(result.getId()).toUri();
-
-        return ResponseEntity.created(location)
-                .body(new ApiResponse(true, "User registered successfully@"));
+        return token;
     }
 }

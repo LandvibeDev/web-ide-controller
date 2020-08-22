@@ -1,6 +1,7 @@
 package com.landvibe.webidecontroller.security;
 
 import com.landvibe.webidecontroller.config.AppProperties;
+import com.landvibe.webidecontroller.model.User;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +9,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class TokenProvider {
@@ -21,15 +24,22 @@ public class TokenProvider {
     }
 
     public String createToken(Authentication authentication) {
-        System.out.println(authentication.getPrincipal());
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-        // UserPrincipal userPrincipal = new UserPrincipal();
-
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + appProperties.getAuth().getTokenExpirationMsec());
-
         return Jwts.builder()
                 .setSubject(userPrincipal.getId())
+                .setIssuedAt(new Date())
+                .setExpiration(expiryDate)
+                .signWith(SignatureAlgorithm.HS256, appProperties.getAuth().getTokenSecret())
+                .compact();
+    }
+
+    public String createToken(User user) {
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + appProperties.getAuth().getTokenExpirationMsec());
+        return Jwts.builder()
+                .setSubject(user.getId())
                 .setIssuedAt(new Date())
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS256, appProperties.getAuth().getTokenSecret())

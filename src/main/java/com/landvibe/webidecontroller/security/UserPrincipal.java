@@ -15,13 +15,17 @@ public class UserPrincipal implements OAuth2User, UserDetails {
     private String id;
     private String email;
     private String password;
+    private String provider;
+    private Boolean registered;
     private Collection<? extends GrantedAuthority> authorities;
     private Map<String, Object> attributes;
 
-    public UserPrincipal(String id, String email, String password, Collection<? extends GrantedAuthority> authorities) {
+    public UserPrincipal(String id, String email, String password, String provider, Boolean registered, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.email = email;
         this.password = password;
+        this.provider = provider;
+        this.registered = registered;
         this.authorities = authorities;
     }
 
@@ -33,6 +37,8 @@ public class UserPrincipal implements OAuth2User, UserDetails {
                 user.getId(),
                 user.getEmail(),
                 user.getPassword(),
+                user.getProvider().toString(),
+                user.getRegistered(),
                 authorities
         );
     }
@@ -40,6 +46,11 @@ public class UserPrincipal implements OAuth2User, UserDetails {
     public static UserPrincipal create(User user, Map<String, Object> attributes) {
         UserPrincipal userPrincipal = UserPrincipal.create(user);
         userPrincipal.setAttributes(attributes);
+
+        System.out.println("[UserPrinciple]");
+        System.out.println("email: " + userPrincipal.getEmail());
+        System.out.println("provider: " + userPrincipal.getProvider());
+        System.out.println("registered: " + userPrincipal.getRegistered());
         return userPrincipal;
     }
 
@@ -50,6 +61,24 @@ public class UserPrincipal implements OAuth2User, UserDetails {
     public String getEmail() {
         return email;
     }
+
+
+    public String getProvider() {
+        return provider;
+    }
+
+    public void setProvider(String provider) {
+        this.provider = provider;
+    }
+
+    public Boolean getRegistered() {
+        return registered;
+    }
+
+    public void setRegistered(Boolean registered) {
+        this.registered = registered;
+    }
+
 
     @Override
     public String getPassword() {

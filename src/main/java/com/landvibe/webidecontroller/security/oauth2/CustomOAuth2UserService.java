@@ -16,7 +16,6 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import javax.naming.AuthenticationException;
 import java.util.Optional;
 
 @Service
@@ -43,13 +42,16 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             throw new OAuth2AuthenticationProcessingException("Email not found from OAuth2 provider");
         }
 
-        Optional<User> userOptional = userRepository.findByEmailAndProviderId(oAuth2UserInfo.getEmail(),
+        Optional<User> userOptional = userRepository.findByEmailAndProvider(oAuth2UserInfo.getEmail(),
                 oAuth2UserRequest.getClientRegistration().getRegistrationId());
         User user;
+
+        System.out.println("email" + oAuth2UserInfo.getEmail());
+        System.out.println("userOptional2" + oAuth2UserRequest.getClientRegistration().getRegistrationId());
+        System.out.println("userOptional3" + userOptional.isPresent());
         if(userOptional.isPresent()) {
             // user가 존재할 때
             user = userOptional.get();
-            user = updateExistingUser(user, oAuth2UserInfo);
         } else {
             user = registerNewUser(oAuth2UserRequest, oAuth2UserInfo);
         }
@@ -66,10 +68,4 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         user.setEmail(oAuth2UserInfo.getEmail());
         return userRepository.save(user);
     }
-
-    private User updateExistingUser(User existingUser, OAuth2UserInfo oAuth2UserInfo) {
-        existingUser.setName(oAuth2UserInfo.getName());
-        return userRepository.save(existingUser);
-    }
-
 }
