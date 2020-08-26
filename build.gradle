@@ -21,9 +21,14 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-webflux', version: '2.3.3.RELEASE'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-mongodb', version: '2.3.2.RELEASE'
+	compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.8.1'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.projectlombok:lombok'
+	testCompile group: 'com.squareup.okhttp3', name: 'mockwebserver', version: '4.8.1'
+	testCompile group: 'io.projectreactor', name: 'reactor-test', version: '3.3.9.RELEASE'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
