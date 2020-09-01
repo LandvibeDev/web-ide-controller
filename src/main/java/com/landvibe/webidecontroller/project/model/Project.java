@@ -1,5 +1,6 @@
 package com.landvibe.webidecontroller.project.model;
 
+import com.landvibe.webidecontroller.file.model.File;
 import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -8,6 +9,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Document(collection = "Project")
 @Getter
@@ -31,6 +33,8 @@ public class Project {
 
     @CreatedBy
     private User user;
+
+    private List<File> files;
 
     @Builder
     public Project(String id, String name, String description, String status, String type,
